@@ -24,6 +24,7 @@ class Password {
     if (_password.contains(RegExp(r'[0-9]')) == false) {
       return false;
     }
+    ;
     return true;
   }
 
