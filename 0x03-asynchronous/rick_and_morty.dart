@@ -24,7 +24,6 @@ Future<void> printRmCharacters() async {
       print('No results found');
     }
   } catch (err) {
-    print('Error caught: $err');
+    print('error caught: $err');
   }
 }
-
