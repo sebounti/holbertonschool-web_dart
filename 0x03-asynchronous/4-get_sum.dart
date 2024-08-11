@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
-import '4-util.dart';
+import '4-util.dart'; // Ensure the path is correct to import the utility functions
 
 Future<double> calculateTotal() async {
   try {
@@ -13,26 +13,29 @@ Future<double> calculateTotal() async {
     String userOrdersJson = await fetchUserOrders(userId);
     List<dynamic> orders = jsonDecode(userOrdersJson);
 
-    // Calculate total price
+    // Initialize total price
     double totalPrice = 0.0;
 
-    // Fetch product price
+    // Fetch and sum the price for each product
     for (String product in orders) {
       String productPriceJson = await fetchProductPrice(product);
 
-      if (productPriceJson.startsWith('error caught ')) {
-        // return -1 if an error occurs
+      // Check if the price response is an error message
+      if (productPriceJson.startsWith('error caught')) {
+        // Return -1 if an error occurred while fetching product price
         return -1;
       }
 
+      // Decode product price from JSON
       double productPrice = jsonDecode(productPriceJson);
+      // Add product price to the total
       totalPrice += productPrice;
     }
 
-    // `totalPrice` is the sum of all the products in the order
+    // Return the total price
     return totalPrice;
   } catch (e) {
-    // return -1 if an error occurs
+    // Return -1 if any exception occurs
     return -1;
   }
 }
