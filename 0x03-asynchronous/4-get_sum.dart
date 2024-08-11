@@ -1,41 +1,48 @@
 import 'dart:convert';
 import 'dart:async';
-import '4-util.dart'; // Ensure the path is correct to import the utility functions
+import 'dart:core';
 
-Future<double> calculateTotal() async {
+Future<String> fetchUserOrders(String id) async {
+  var orders = {
+    "7ee9a243-01ca-47c9-aa14-0149789764c3": ["pizza", "orange"]
+  };
   try {
-    // Fetch user data
-    String userData = await fetchUserData();
-    Map<String, dynamic> userMap = jsonDecode(userData);
-    String userId = userMap['id'];
+    return Future.delayed(
+        const Duration(seconds: 2), () => json.encode(orders[id]));
+  } catch (err) {
+    return "error caught : $err";
+  }
+}
 
-    // Fetch user orders
-    String userOrdersJson = await fetchUserOrders(userId);
-    List<dynamic> orders = jsonDecode(userOrdersJson);
+Future<String> fetchUserData() => Future.delayed(
+      const Duration(seconds: 2),
+      () =>
+          '{"id" : "7ee9a243-01ca-47c9-aa14-0149789764c3", "username" : "admin"}',
+    );
 
-    // Initialize total price
-    double totalPrice = 0.0;
+Future<String> fetchProductPrice(product) async {
+  var products = {"pizza": 20.30, "orange": 10, "water": 5, "soda": 8.5};
+  try {
+    return Future.delayed(
+        const Duration(seconds: 2), () => json.encode(products[product]));
+  } catch (err) {
+    return "error caught : $err";
+  }
+}
 
-    // Fetch and sum the price for each product
-    for (String product in orders) {
-      String productPriceJson = await fetchProductPrice(product);
+calculateTotal() async {
+  try {
+    double price = 0;
 
-      // Check if the price response is an error message
-      if (productPriceJson.startsWith('error caught')) {
-        // Return -1 if an error occurred while fetching product price
-        return -1;
-      }
-
-      // Decode product price from JSON
-      double productPrice = jsonDecode(productPriceJson);
-      // Add product price to the total
-      totalPrice += productPrice;
+    final Map<String, dynamic> userData = json.decode(await fetchUserData());
+    final String data = userData['id'];
+    final List<dynamic> userOrder = json.decode(await fetchUserOrders(data));
+    for (int idx = 0; idx < userOrder.length; idx++) {
+      price += json.decode(await fetchProductPrice(userOrder[idx]));
     }
-
-    // Return the total price
-    return totalPrice;
-  } catch (e) {
-    // Return -1 if any exception occurs
+    return price;
+  } catch (err) {
+    print('error caught: $err');
     return -1;
   }
 }
