@@ -1,3 +1,3 @@
-void helloFunction(string, str) {
+void helloFunction( str) {
   print('Hello $str from dart');
 }
