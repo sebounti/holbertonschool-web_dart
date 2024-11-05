@@ -1,29 +1,27 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 Future<void> printRmCharacters() async {
+  const url =
+      'https://rickandmortyapi.com/api/character'; // Rick and Morty API
+
   try {
-    // Fetch data from the Rick and Morty API
-    final response = await http.get(
-      Uri.parse("https://rickandmortyapi.com/api/character"),
-    );
+    final response = await http.get(Uri.parse(url));
 
-    // Decode the JSON response
-    var jsonResponse = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
 
-    // Check if the JSON response contains the 'results' key
-    if (jsonResponse['results'] != null) {
-      // Get the list of characters
-      var characters = jsonResponse['results'] as List;
+      final characters = data['results'];
 
-      // Iterate through the list and print each character's name
       for (var character in characters) {
         print(character['name']);
       }
+
+  
     } else {
-      print('No results found');
+      print('Error: Failed to load characters');
     }
-  } catch (err) {
-    print('error caught: $err');
+  } catch (e) {
+    print('Error caught: $e');
   }
 }
