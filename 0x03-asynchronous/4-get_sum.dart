@@ -1,6 +1,15 @@
 import "4-util.dart";
 import "dart:convert";
 
+/// Calculates the total price of all the products in the user's order.
+///
+/// This function first calls `fetchUserData` to get the user's id. It then
+/// calls `fetchUserOrders` with the user's id to get the list of products they
+/// have ordered. It then calls `fetchProductPrice` for each product to get the
+/// price of that product. The total price is then the sum of the prices of all
+/// products.
+///
+/// If any error occurs during this process, -1 is returned.
 Future<double> calculateTotal() async {
   try {
     // Call fetchUserData
